@@ -1,0 +1,36 @@
+•	#index the fasta reference
+o	bwa index mt.fasta
+•	#start bwa mem alignment
+o	bwa mem mt.fasta ler.fq > ler.sam (this makes my sam file – where each read might align)
+•	#convert to binary – converts human readable doc to binary alignment map
+o	samtools view –b –o ler.bam –S ler.sam
+•	#sort my bam file (put all the reads in order as they occur in the reference genome)
+o	samtools sort ler.bam ler.sorted  (sort will add the .bam exntension)
+•	#index my .sorted.bam
+o	samtools index ler.sorted.bam 
+•	#index the reference
+o	samtools faidx mt.fa 
+•	#Generate .vcf 
+	samtools mpileup –gf mt.fa ler.sorted.bam | bcftools view –vcg - > snps_indels.vcf 
+
+
+#index the fasta reference
+bwa index s_paradoxus_mt.fa
+
+#start bwa mem alignment
+bwa mem s_paradoxus_mt.fa SRR1868842.fastq > fungus.sam
+
+#convert to binary 
+samtools view –b –o fungus.bam –S fungus.sam
+
+#sort my bam file 
+samtools sort fungus.bam fungus.sorted 
+
+#index my sorted bam
+samtools index fungus.sorted.bam 
+
+#index the reference 
+samtools faidx s_paradoxus_mt.fa 
+
+#Generate vcf
+samtools mpileup –gf s_paradoxus_mt.fa fungus.sorted.bam | bcftools view –vcg - > fungus_snps.vcf 
